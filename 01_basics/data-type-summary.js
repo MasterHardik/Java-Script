@@ -55,7 +55,6 @@ let user1={
 }
 
 let user2 = user1;
-// let userTwo =new  user1;
 
 user2.email = "sample@gmail.com";//since reference ahnce changes in user1 also so be careful using non-premitive data types
 
