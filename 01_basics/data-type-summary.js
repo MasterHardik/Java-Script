@@ -35,3 +35,29 @@ const myFunction = function(){
 console.log(typeof myFunction);
 
 // https://262.ecma-international.org/5.1/#sec-11.4.3
+
+
+// ++++++++++++++++++++++++++++++++++
+// Stack(primitive), Heap(Non-Primitive)
+
+let myyoutubename = "MasterHardik"
+
+let anothername =myyoutubename
+anothername = "Hardik Chouhan"
+
+console.log(myyoutubename);
+console.log(anothername);
+
+
+let user1={
+    email:"user@google.com",
+    upi:"user@ybl"
+}
+
+let user2 = user1;
+// let userTwo =new  user1;
+
+user2.email = "sample@gmail.com";//since reference ahnce changes in user1 also so be careful using non-premitive data types
+
+console.log(user1)
+console.log(user2)
