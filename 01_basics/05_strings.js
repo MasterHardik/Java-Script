@@ -26,6 +26,7 @@ console.log(anotherString);
 const newStringOne = '        HArdik       '
 console.log(newStringOne);
 console.log(newStringOne.trim());
+console.log(newStringOne.trimEnd());
 
 const url = "https://hardikchoun%20chouhan"
 
