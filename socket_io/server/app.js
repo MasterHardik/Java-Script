@@ -2,6 +2,7 @@ import express from "express";
 import { Server } from "socket.io";
 import {createServer} from "http"
 import cors from 'cors'
+import { log } from "console";
 
 const app = express();
 const PORT = process.env.PORT || 3000; 
@@ -19,10 +20,13 @@ const io = new Server(server,{
 app.use(cors())
 
 io.on("connection",(socket)=>{
-    console.log("User connected");
-    console.log("Id",socket.id);
+    console.log("User connected ", socket.id);
     // socket.emit("Welcome", `Welcome to the server , ${socket.id}`) // sbhko jaega 
     // socket.broadcast.emit("Welcome", `${socket.id} joined the server`) // all except current
+
+    socket.on("message",(data)=>{
+        console.log(data);
+    })
 
     socket.on("disconnect",()=>{
         console.log(`User disconnected, ${socket.id}`);
