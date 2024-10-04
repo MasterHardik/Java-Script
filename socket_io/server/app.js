@@ -1,48 +1,48 @@
 import express from "express";
 import { Server } from "socket.io";
-import {createServer} from "http"
-import cors from 'cors'
-import { log } from "console";
+import { createServer } from "http";
+import cors from "cors";
 
 const app = express();
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT || 3000;
 
-const server = new createServer(app)
+const server = createServer(app);
 
-const io = new Server(server,{
-    cors:{
-        origin:"http://localhost:5173",
-        methods:["GET","POST"],
-        credentials:true,
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+        credentials: true,
     },
-})
+});
 
-app.use(cors())
+app.use(cors());
 
-io.on("connection",(socket)=>{
-    console.log("User connected ", socket.id);
-    // socket.emit("Welcome", `Welcome to the server , ${socket.id}`) // sbhko jaega 
-    // socket.broadcast.emit("Welcome", `${socket.id} joined the server`) // all except current
+io.on("connection", (socket) => {
+    console.log("User connected:", socket.id);
 
-    socket.on("message",({room,message})=>{
-        console.log({room,message});
-        // // Now I we want to send to entire user
-        // io.emit("receive-message",data);
+    // Optionally emit a welcome message to the newly connected socket
+    socket.emit("Welcome", `Welcome to the server, ${socket.id}`);
 
-        //broadcast, to send to all except self
-        // socket.broadcast.emit("receive-message",data);
+    // Listen for messages sent by clients
+    socket.on("message", ({ room, message }) => {
+        console.log({ room, message });
+        
+        if (room) {
+            // Send to specific room if it exists
+            io.to(room).emit("receive-message", { message, room });
+        } else {
+            // Broadcast to all clients if no room is specified
+            socket.broadcast.emit("broadcast-message", { message });
+        }
+    });
 
-        //To send to specific room
-        io.to(room).emit("receive-message",message);
+    // Handle socket disconnection
+    socket.on("disconnect", () => {
+        console.log(`User disconnected: ${socket.id}`);
+    });
+});
 
-    })
-    
-
-    socket.on("disconnect",()=>{
-        console.log(`User disconnected, ${socket.id}`);
-    })
-
-})
 app.get("/api/server", (req, res) => {
     res.status(200).json({ msg: "Hello From Server" });
 });
@@ -51,6 +51,7 @@ app.get("/", (req, res) => {
     res.status(200).send("<h1>Hello From Server Root</h1>");
 });
 
+// Start the server
 server.listen(PORT, () => {
-    console.log(`server started at: http://localhost:${PORT}/api/server`);
+    console.log(`Server started at: http://localhost:${PORT}/api/server`);
 });
