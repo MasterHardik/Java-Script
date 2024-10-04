@@ -26,7 +26,14 @@ io.on("connection",(socket)=>{
 
     socket.on("message",(data)=>{
         console.log(data);
+        // // Now I we want to send to entire user
+        // io.emit("receive-message",data);
+
+        //broadcast, to send to all except self
+        socket.broadcast.emit("receive-message",data);
+
     })
+    
 
     socket.on("disconnect",()=>{
         console.log(`User disconnected, ${socket.id}`);
