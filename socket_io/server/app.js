@@ -24,13 +24,16 @@ io.on("connection",(socket)=>{
     // socket.emit("Welcome", `Welcome to the server , ${socket.id}`) // sbhko jaega 
     // socket.broadcast.emit("Welcome", `${socket.id} joined the server`) // all except current
 
-    socket.on("message",(data)=>{
-        console.log(data);
+    socket.on("message",({room,message})=>{
+        console.log({room,message});
         // // Now I we want to send to entire user
         // io.emit("receive-message",data);
 
         //broadcast, to send to all except self
-        socket.broadcast.emit("receive-message",data);
+        // socket.broadcast.emit("receive-message",data);
+
+        //To send to specific room
+        io.to(room).emit("receive-message",message);
 
     })
     
